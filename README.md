@@ -1,2 +1,2 @@
-# cinema_scraper
+# Cinema Scraper
 Scrapy project for some cinema info..
