@@ -62,9 +62,10 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "cinema_scraper_project.pipelines.CinemaScraperProjectPipeline": 300,
-#}
+ITEM_PIPELINES = {
+    #"cinema_scraper_project.pipelines.CinemaScraperProjectPipeline": 300,
+    #"cinema_scraper_project.pipelines.CinestarSpiderPipeline": 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

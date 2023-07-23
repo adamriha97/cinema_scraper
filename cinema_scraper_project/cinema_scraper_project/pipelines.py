@@ -11,3 +11,15 @@ from itemadapter import ItemAdapter
 class CinemaScraperProjectPipeline:
     def process_item(self, item, spider):
         return item
+
+class CinestarSpiderPipeline:
+    def process_item(self, item, spider):
+        adapter = ItemAdapter(item)
+
+        ## ids to int
+        ids = ['movie_id', 'cinema_id']
+        for id in ids:
+            value = adapter.get(id)
+            adapter[id] = int(value)
+
+        return item
