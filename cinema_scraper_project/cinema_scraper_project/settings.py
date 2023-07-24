@@ -17,7 +17,7 @@ NEWSPIDER_MODULE = "cinema_scraper_project.spiders"
 #USER_AGENT = "cinema_scraper_project (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -50,9 +50,11 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "cinema_scraper_project.middlewares.CinemaScraperProjectDownloaderMiddleware": 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    #"cinema_scraper_project.middlewares.CinemaScraperProjectDownloaderMiddleware": 543,
+    'cinema_scraper_project.middlewares.ScrapeOpsFakeUserAgentMiddleware': 400,
+    #'cinema_scraper_project.middlewares.ScrapeOpsFakeBrowserHeaderAgentMiddleware': 400,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -92,3 +94,13 @@ ITEM_PIPELINES = {
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+
+
+
+# Set other settings
+SCRAPEOPS_API_KEY = '50b1fdde-ac43-48e8-af20-100564a98a0d'
+SCRAPEOPS_FAKE_USER_AGENT_ENDPOINT = 'https://headers.scrapeops.io/v1/user-agents'
+SCRAPEOPS_FAKE_USER_AGENT_ENABLED = True
+SCRAPEOPS_FAKE_BROWSER_HEADER_ENDPOINT = 'https://headers.scrapeops.io/v1/browser-headers'
+SCRAPEOPS_FAKE_BROWSER_HEADER_ENABLED = True
+SCRAPEOPS_NUM_RESULTS = 5
