@@ -98,9 +98,11 @@ FEED_EXPORT_ENCODING = "utf-8"
 
 
 # Set other settings
-SCRAPEOPS_API_KEY = '50b1fdde-ac43-48e8-af20-100564a98a0d'
+with open('cinema_scraper_project\SCRAPEOPS_API_KEY.txt', 'r') as file:
+    SCRAPEOPS_API_KEY = file.read()
 SCRAPEOPS_FAKE_USER_AGENT_ENDPOINT = 'https://headers.scrapeops.io/v1/user-agents'
 SCRAPEOPS_FAKE_USER_AGENT_ENABLED = True
 SCRAPEOPS_FAKE_BROWSER_HEADER_ENDPOINT = 'https://headers.scrapeops.io/v1/browser-headers'
 SCRAPEOPS_FAKE_BROWSER_HEADER_ENABLED = True
 SCRAPEOPS_NUM_RESULTS = 5
+DAYS_AHEAD_TO_SCRAPE = 14
