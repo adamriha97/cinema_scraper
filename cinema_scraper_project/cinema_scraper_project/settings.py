@@ -51,16 +51,19 @@ ROBOTSTXT_OBEY = False
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    #"cinema_scraper_project.middlewares.CinemaScraperProjectDownloaderMiddleware": 543,
+#    "cinema_scraper_project.middlewares.CinemaScraperProjectDownloaderMiddleware": 543,
     #'cinema_scraper_project.middlewares.ScrapeOpsFakeUserAgentMiddleware': 400,
     #'cinema_scraper_project.middlewares.ScrapeOpsFakeBrowserHeaderAgentMiddleware': 400,
+    'scrapeops_scrapy.middleware.retry.RetryMiddleware': 550, 
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': None, 
 }
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
+EXTENSIONS = {
 #    "scrapy.extensions.telnet.TelnetConsole": None,
-#}
+    'scrapeops_scrapy.extension.ScrapeOpsMonitor': 500,
+}
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
@@ -98,8 +101,11 @@ FEED_EXPORT_ENCODING = "utf-8"
 
 
 # Set other settings
-with open('cinema_scraper_project\SCRAPEOPS_API_KEY.txt', 'r') as file:
-    SCRAPEOPS_API_KEY = file.read()
+
+#with open('cinema_scraper_project\SCRAPEOPS_API_KEY.txt', 'r') as file:
+#    SCRAPEOPS_API_KEY = file.read()
+SCRAPEOPS_API_KEY = '50b1fdde-ac43-48e8-af20-100564a98a0d'
+
 SCRAPEOPS_FAKE_USER_AGENT_ENDPOINT = 'https://headers.scrapeops.io/v1/user-agents'
 SCRAPEOPS_FAKE_USER_AGENT_ENABLED = True
 SCRAPEOPS_FAKE_BROWSER_HEADER_ENDPOINT = 'https://headers.scrapeops.io/v1/browser-headers'
