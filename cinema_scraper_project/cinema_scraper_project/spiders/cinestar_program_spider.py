@@ -14,7 +14,10 @@ class CinestarProgramSpiderSpider(scrapy.Spider):
 
     @classmethod
     def from_crawler(cls, crawler):
-        return cls(crawler.settings)
+        settings = crawler.settings
+        spider = cls(settings)
+        spider._set_crawler(crawler)
+        return spider
 
     def __init__(self, settings):
         self.days_ahead = settings.get('DAYS_AHEAD_TO_SCRAPE')
