@@ -43,6 +43,7 @@ class CinestarProgramSpiderSpider(scrapy.Spider):
         for i in range(days_ahead):
             date = str(datetime.now().date() + timedelta(days=i))
             cin_day_page_url = 'https://www.cinestar.cz/cz/?option=com_csevents&view=eventsforday&date=' + date + '&cinema=' + cinema_id + '&titleId=0&format=raw&tpl=program'
+            #if cin_day_page_url == 'https://www.cinestar.cz/cz/?option=com_csevents&view=eventsforday&date=2023-08-17&cinema=11&titleId=0&format=raw&tpl=program':
             yield response.follow(cin_day_page_url, callback=self.parse_day_page)
 
     def parse_day_page(self, response):
@@ -58,12 +59,19 @@ class CinestarProgramSpiderSpider(scrapy.Spider):
             movie_img = movie.css('td.tdTitle img').attrib['src']
             if 'CZ' in movie_title_long:
                 dab_tit = 'Dabing'
-                rating = movie.css('td.tdTitle span.desc span.play-param')[0].css('a::text').get()
-                rating_detail = movie.css('td.tdTitle span.desc span.play-param')[0].css('div.detail::text').get().split('        ')[1].replace('\t', '')
+                rating = 'N/A'
+                rating_detail = 'N/A'
+                if movie.css('td.tdTitle span.desc span.play-param').get() is not None:
+                    rating = movie.css('td.tdTitle span.desc span.play-param')[0].css('a::text').get()
+                    rating_detail = movie.css('td.tdTitle span.desc span.play-param')[0].css('div.detail::text').get().split('        ')[1].replace('\t', '')
             else:
-                dab_tit = movie.css('td.tdTitle span.desc span.play-param')[0].css('a::text').get()
-                rating = movie.css('td.tdTitle span.desc span.play-param')[1].css('a::text').get()
-                rating_detail = movie.css('td.tdTitle span.desc span.play-param')[1].css('div.detail::text').get().split('        ')[1].replace('\t', '')
+                dab_tit = 'N/A'
+                rating = 'N/A'
+                rating_detail = 'N/A'
+                if movie.css('td.tdTitle span.desc span.play-param').get() is not None:
+                    dab_tit = movie.css('td.tdTitle span.desc span.play-param')[0].css('a::text').get()
+                    rating = movie.css('td.tdTitle span.desc span.play-param')[1].css('a::text').get()
+                    rating_detail = movie.css('td.tdTitle span.desc span.play-param')[1].css('div.detail::text').get().split('        ')[1].replace('\t', '')
             uhd = 0
             if movie.css('td.tdTitle span.desc span.ctyrik span::text').get() is not None: uhd = 1
             premiere = 0
@@ -71,8 +79,9 @@ class CinestarProgramSpiderSpider(scrapy.Spider):
             new = 0
             if movie.css('td.tdTitle span.desc span.premiera div.detail::text').get() is not None: new = 1 # movie.css('td.tdTitle span.desc span.premiera div.detail::text').get().split('        ')[1].replace('\t', '')
             times = movie.css('td')[1:]
-            for time in times:
-                if time.css('span'):
+            for time_td in times:
+                #if time.css('span'):
+                for time in time_td.xpath("span"):
                     if time.css('span a::text').get() is None:
                         projected = 1
                         time_start = time.css('span::text').get().replace('\r', '').replace('\n', '').replace('\t', '').replace(' ', '')
