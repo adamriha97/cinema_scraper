@@ -52,8 +52,8 @@ ROBOTSTXT_OBEY = False
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
 #    "cinema_scraper_project.middlewares.CinemaScraperProjectDownloaderMiddleware": 543,
-    #'cinema_scraper_project.middlewares.ScrapeOpsFakeUserAgentMiddleware': 400,
-    #'cinema_scraper_project.middlewares.ScrapeOpsFakeBrowserHeaderAgentMiddleware': 400,
+    'cinema_scraper_project.middlewares.ScrapeOpsFakeUserAgentMiddleware': 400,
+    'cinema_scraper_project.middlewares.ScrapeOpsFakeBrowserHeaderAgentMiddleware': 300,
     'scrapeops_scrapy.middleware.retry.RetryMiddleware': 550, 
     'scrapy.downloadermiddlewares.retry.RetryMiddleware': None, 
 }

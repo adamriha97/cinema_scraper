@@ -145,6 +145,7 @@ class ScrapeOpsFakeUserAgentMiddleware:
         random_user_agent = self._get_random_user_agent()
         request.headers['User-Agent'] = random_user_agent
 
+from scrapy.http import Headers
 
 class ScrapeOpsFakeBrowserHeaderAgentMiddleware:
 
@@ -179,6 +180,6 @@ class ScrapeOpsFakeBrowserHeaderAgentMiddleware:
         else:
             self.scrapeops_fake_browser_headers_active = True
     
-    def process_request(self, request, spider):        
+    def process_request(self, request, spider):
         random_browser_header = self._get_random_browser_header()
-        request.headers = random_browser_header
+        request.headers = Headers(random_browser_header)
