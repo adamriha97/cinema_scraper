@@ -9,7 +9,8 @@ class CinestarProgramSpiderSpider(scrapy.Spider):
     start_urls = ['http://www.cinestar.cz/cz/']
 
     custom_settings = {
-        'FEEDS': {'cinestar_program_data.json': {'format': 'json', 'overwrite': True}}
+        'FEEDS': {'cinestar_program_data.json': {'format': 'json', 'overwrite': True}},
+        'FEED_EXPORT_ENCODING': 'utf-8'
         }
 
     @classmethod
@@ -28,14 +29,17 @@ class CinestarProgramSpiderSpider(scrapy.Spider):
         cinemas = response.css('ul.nav li')
         for cinema in cinemas:
             cinema_cinestar_url = 'https://www.cinestar.cz' + cinema.css('a').attrib['href']
-            #if cinema_cinestar_url == 'https://www.cinestar.cz/cz/liberec/domu': # https://www.cinestar.cz/cz/liberec/domu https://www.cinestar.cz/cz/praha5/domu
+            #if cinema_cinestar_url == 'https://www.cinestar.cz/cz/praha5/domu': # https://www.cinestar.cz/cz/liberec/domu https://www.cinestar.cz/cz/praha5/domu
             yield response.follow(cinema_cinestar_url, callback=self.parse_cinema_page)
 
     def parse_cinema_page(self, response):
         global cinemas_dict
         cinema_id = response.xpath("//script[@type='text/javascript']/text()").get().split(';')[1].split()[-1]
         cinemas_dict[cinema_id] = [x for x in response.css('td.cinema ::text').get().split('   ') if x != ''][1] + (', České Budějovice' if response.css('tr.contact-city td ::text').get() == 'České Budějovice' else '') # ', ' + response.css('tr.contact-city td ::text').get()
-        days_ahead = self.days_ahead + 1
+        if self.days_ahead is None:
+            days_ahead = 15
+        else:
+            days_ahead = self.days_ahead + 1
         for i in range(days_ahead):
             date = str(datetime.now().date() + timedelta(days=i))
             cin_day_page_url = 'https://www.cinestar.cz/cz/?option=com_csevents&view=eventsforday&date=' + date + '&cinema=' + cinema_id + '&titleId=0&format=raw&tpl=program'
@@ -52,9 +56,14 @@ class CinestarProgramSpiderSpider(scrapy.Spider):
             movie_title = movie.css('td.tdTitle span.title a::text').get().replace(' DABING', '').replace(' TITULKY', '').replace(' ATMOS', '').replace(' TDL', '').replace(' GC', '').replace(' ČSFD', '').replace(' PRO SENIORY', '')
             movie_url = 'https://www.cinestar.cz' + movie.css('td.tdTitle span.title a').attrib['href']
             movie_img = movie.css('td.tdTitle img').attrib['src']
-            dab_tit = movie.css('td.tdTitle span.desc span.play-param')[0].css('a::text').get()
-            rating = movie.css('td.tdTitle span.desc span.play-param')[1].css('a::text').get()
-            rating_detail = movie.css('td.tdTitle span.desc span.play-param')[1].css('div.detail::text').get().split('        ')[1].replace('\t', '')
+            if 'CZ' in movie_title_long:
+                dab_tit = 'Dabing'
+                rating = movie.css('td.tdTitle span.desc span.play-param')[0].css('a::text').get()
+                rating_detail = movie.css('td.tdTitle span.desc span.play-param')[0].css('div.detail::text').get().split('        ')[1].replace('\t', '')
+            else:
+                dab_tit = movie.css('td.tdTitle span.desc span.play-param')[0].css('a::text').get()
+                rating = movie.css('td.tdTitle span.desc span.play-param')[1].css('a::text').get()
+                rating_detail = movie.css('td.tdTitle span.desc span.play-param')[1].css('div.detail::text').get().split('        ')[1].replace('\t', '')
             uhd = 0
             if movie.css('td.tdTitle span.desc span.ctyrik span::text').get() is not None: uhd = 1
             premiere = 0
