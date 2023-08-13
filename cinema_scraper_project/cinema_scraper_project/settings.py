@@ -103,9 +103,9 @@ FEED_EXPORT_ENCODING = "utf-8"
 # Set other settings
 
 import os
-from dotenv import load_dotenv
 
 try:
+    from dotenv import load_dotenv
     load_dotenv()
 except:
     pass
