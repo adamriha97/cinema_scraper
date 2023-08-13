@@ -102,9 +102,18 @@ FEED_EXPORT_ENCODING = "utf-8"
 
 # Set other settings
 
+import os
+from dotenv import load_dotenv
+
+try:
+    load_dotenv()
+except:
+    pass
+
 #with open('cinema_scraper_project\SCRAPEOPS_API_KEY.txt', 'r') as file:
 #    SCRAPEOPS_API_KEY = file.read()
-SCRAPEOPS_API_KEY = '50b1fdde-ac43-48e8-af20-100564a98a0d'
+#SCRAPEOPS_API_KEY = '50b1fdde-ac43-48e8-af20-100564a98a0d'
+SCRAPEOPS_API_KEY = os.environ["scrapeops_api_key"]
 
 SCRAPEOPS_FAKE_USER_AGENT_ENDPOINT = 'https://headers.scrapeops.io/v1/user-agents'
 SCRAPEOPS_FAKE_USER_AGENT_ENABLED = True
