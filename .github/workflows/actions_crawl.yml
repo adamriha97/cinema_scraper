@@ -5,7 +5,7 @@ on:
 
 jobs:
     spider:
-        runs-on: ubuntu_latest
+        runs-on: ubuntu-latest
         defaults:
             run:
                 working-directory: ./cinema_scraper_project/
