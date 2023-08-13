@@ -10,7 +10,10 @@ class CinestarProgramSpiderSpider(scrapy.Spider):
 
     custom_settings = {
         'FEEDS': {'cinestar_program_data.json': {'format': 'json', 'overwrite': True}},
-        'FEED_EXPORT_ENCODING': 'utf-8'
+        'FEED_EXPORT_ENCODING': 'utf-8',
+        'ITEM_PIPELINES': {
+            "cinema_scraper_project.pipelines.CineStarMongoDBPipeline": 700
+        }
         }
 
     @classmethod

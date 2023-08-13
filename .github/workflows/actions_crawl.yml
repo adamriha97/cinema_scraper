@@ -15,7 +15,9 @@ jobs:
                 python-version: ['3.10']
         
         env:
-            scrapeops_api_key: ${{ secrets.SCRAPEOPS_API_KEY }}
+            SCRAPEOPS_API_KEY: ${{ secrets.SCRAPEOPS_API_KEY }}
+            MONGODB_URI: ${{ secrets.MONGODB_URI }}
+            MONGODB_DATABASE: ${{ secrets.MONGODB_DATABASE }}
 
         steps:
             - uses: actions/checkout@v3

@@ -70,6 +70,7 @@ EXTENSIONS = {
 ITEM_PIPELINES = {
     #"cinema_scraper_project.pipelines.CinemaScraperProjectPipeline": 300,
     #"cinema_scraper_project.pipelines.CinestarSpiderPipeline": 300,
+    #"cinema_scraper_project.pipelines.MongoDBPipeline": 700
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -113,11 +114,14 @@ except:
 #with open('cinema_scraper_project\SCRAPEOPS_API_KEY.txt', 'r') as file:
 #    SCRAPEOPS_API_KEY = file.read()
 #SCRAPEOPS_API_KEY = '50b1fdde-ac43-48e8-af20-100564a98a0d'
-SCRAPEOPS_API_KEY = os.environ["scrapeops_api_key"]
-
+SCRAPEOPS_API_KEY = os.environ["SCRAPEOPS_API_KEY"]
 SCRAPEOPS_FAKE_USER_AGENT_ENDPOINT = 'https://headers.scrapeops.io/v1/user-agents'
 SCRAPEOPS_FAKE_USER_AGENT_ENABLED = True
 SCRAPEOPS_FAKE_BROWSER_HEADER_ENDPOINT = 'https://headers.scrapeops.io/v1/browser-headers'
 SCRAPEOPS_FAKE_BROWSER_HEADER_ENABLED = True
 SCRAPEOPS_NUM_RESULTS = 5
+
+MONGODB_URI = os.environ["MONGODB_URI"]
+MONGODB_DATABASE = os.environ["MONGODB_DATABASE"]
+
 DAYS_AHEAD_TO_SCRAPE = 14
