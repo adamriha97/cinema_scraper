@@ -67,3 +67,32 @@ class CineStarMongoDBPipeline:
         data = dict(CinestarProgramItem(item))
         self.db[self.collection].insert_one(data)
         return item
+    
+from .items import CinemacityProgramItem
+
+class CinemaCityMongoDBPipeline:
+
+    collection = 'cinemacity_program'
+
+    def __init__(self, settings):
+        self.mongodb_uri = settings.get('MONGODB_URI')
+        self.mongodb_db = settings.get('MONGODB_DATABASE', 'items')
+        if not self.mongodb_uri: sys.exit("You need to provide a Connection String.")
+    
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler.settings)
+
+    def open_spider(self, spider):
+        self.client = pymongo.MongoClient(self.mongodb_uri)
+        self.db = self.client[self.mongodb_db]
+        # Start with a clean database
+        self.db[self.collection].delete_many({})
+
+    def close_spider(self, spider):
+        self.client.close()
+
+    def process_item(self, item, spider):
+        data = dict(CinemacityProgramItem(item))
+        self.db[self.collection].insert_one(data)
+        return item
