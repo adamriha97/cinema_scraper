@@ -2,6 +2,8 @@ name: Github Actions Crawl
 
 on:
     workflow_dispatch:
+    schedule:
+        - cron:  '15 1 * * *'
 
 jobs:
     spider:
