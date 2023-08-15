@@ -101,6 +101,27 @@ FEED_EXPORT_ENCODING = "utf-8"
 
 
 
+# settings.py - for scrapy_playwright
+
+#DOWNLOAD_HANDLERS = {
+#    "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+#    "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+#}
+
+## settings.py - for scrapy_selenium
+
+# for Chrome driver 
+#from shutil import which
+  
+SELENIUM_DRIVER_NAME = 'chrome'
+#SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver.exe')
+SELENIUM_DRIVER_ARGUMENTS=['--headless'] # '--headless'
+  
+DOWNLOADER_MIDDLEWARES = {
+     'scrapy_selenium.SeleniumMiddleware': 800
+     }
+
+
 # Set other settings
 
 import os

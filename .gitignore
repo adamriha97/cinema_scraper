@@ -1,3 +1,4 @@
 .env
+.vscode
 cinema_scraper_env
 SCRAPEOPS_API_KEY.txt
