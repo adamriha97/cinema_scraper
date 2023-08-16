@@ -36,4 +36,4 @@ jobs:
             
             - name: ls test2
               run: |
-                py -m pip show scrapy-selenium
+                pip show scrapy-selenium
