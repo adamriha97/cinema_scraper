@@ -45,5 +45,5 @@ jobs:
 
             - name: ls test4
               run: |
-                cd /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/scrapy-selenium
+                cd /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/scrapy_selenium
                 ls
