@@ -37,3 +37,13 @@ jobs:
             - name: ls test2
               run: |
                 pip show scrapy-selenium
+
+            - name: ls test3
+              run: |
+                cd /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages
+                ls
+
+            - name: ls test4
+              run: |
+                cd /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/scrapy-selenium
+                ls
