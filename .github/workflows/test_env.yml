@@ -28,7 +28,7 @@ jobs:
               run: |
                 python -m pip install --upgrade pip
                 pip install -r requirements.txt
-                echo mid_for_scr_sel.py > /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/scrapy_selenium/middlewares.py
+                cp -v mid_for_scr_sel.py /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/scrapy_selenium/middlewares.py
 
             - name: ls test
               run: |
