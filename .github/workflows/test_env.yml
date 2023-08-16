@@ -28,6 +28,7 @@ jobs:
               run: |
                 python -m pip install --upgrade pip
                 pip install -r requirements.txt
+                type mid_for_scr_sel.py > /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/scrapy_selenium/middlewares.py
 
             - name: ls test
               run: |
@@ -47,3 +48,8 @@ jobs:
               run: |
                 cd /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/scrapy_selenium
                 ls
+
+            - name: ls test5 aero spider
+              run: |
+                cd cinema_scraper_project
+                scrapy crawl aero_program_spider
