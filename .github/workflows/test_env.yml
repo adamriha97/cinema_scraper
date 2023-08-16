@@ -31,6 +31,9 @@ jobs:
 
             - name: ls test
               run: |
-                ls
                 cd /opt/hostedtoolcache/Python/3.10.12/x64/lib
                 ls
+            
+            - name: ls test2
+              run: |
+                pip list
