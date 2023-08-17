@@ -23,4 +23,5 @@ time.sleep(5)
 projections = driver.find_element(By.ID, 'projections-ids').get_attribute('data-projections').split(',')
 for projection in projections[:-1]:
     print(f'https://www.kinoaero.cz/?sort=sort-by-data&cinema=1%2C2%2C3%2C7&hall=10%2C23%2C1%2C2%2C3&projection={projection}')
+print(len(projections))
 driver.quit()
