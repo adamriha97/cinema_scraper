@@ -5,11 +5,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import Chrome
 import time
 from selenium.webdriver.chrome.options import Options
+from cinema_scraper_project.items import AeroProgramItem
 
 
 class AeroProgramSpiderSpider(scrapy.Spider):
     name = 'aero_program_spider'
-    #allowed_domains = ['www.kinoaero.cz']
+    allowed_domains = ['www.kinoaero.cz']
     #start_urls = ['http://www.kinoaero.cz/']
 
     custom_settings = {
@@ -33,7 +34,7 @@ class AeroProgramSpiderSpider(scrapy.Spider):
         driver.find_element(By.CLASS_NAME, 'custom-select__input-chevron-active').click()
         time.sleep(5)
         projections = driver.find_element(By.ID, 'projections-ids').get_attribute('data-projections').split(',')
-        for projection in projections[:-1]:
+        for projection in projections[:15]:
             url = f'https://www.kinoaero.cz/?sort=sort-by-data&cinema=1%2C2%2C3%2C7&hall=10%2C23%2C1%2C2%2C3&projection={projection}'
             yield SeleniumRequest(
                 url=url, 
@@ -58,10 +59,45 @@ class AeroProgramSpiderSpider(scrapy.Spider):
         ###)
 
     def parse(self, response):
-        ###for program in response.css('div.program'):
-        ###    yield {
-        ###        'day': program.css('span.desktop::text').get()
-        ###    }
-        yield {
-            'titul': response.css('div.modal-body__right h3::text').get()
-        }
+        dialog = response.css('div.modal-dialog')
+        item = AeroProgramItem()
+        movie_info = str(dialog.css('div.modal-body__right h6').get()).split('\n')[1].strip()
+        item['event_id'] = response.url.split('&projection=')[1]
+        item['cinema_name3'] = dialog.css('div.modal-body__projection-cinema span::text').get()
+        item['date'] = dialog.css('div.modal-body__projection-day ::text').get().replace('\n', '').strip()
+        item['movie_title'] = dialog.css('div.modal-body__right h3::text').get()
+        item['movie_url'] = response.url
+        item['movie_img'] = 'http://www.kinoaero.cz' + dialog.css('div.slick-track img').attrib['src']
+        item['movie_imgs'] = []
+        for img in dialog.css('div.slick-track img'):
+            item['movie_imgs'].append('http://www.kinoaero.cz' + img.css('img').attrib['src'])
+        item['movie_vid'] = 'N/A'
+        if dialog.css('button#trailer-button') is not None:
+            item['movie_vid'] = 'https://www.youtube.com/watch?v=' + dialog.css('button#trailer-button').attrib['data-youtube-id']
+        item['dab_tit'] = 'N/A'
+        if 'znění: ' in movie_info:
+            if 'čeština' in movie_info.split('nění: ')[1].split('/')[0]:
+                item['dab_tit'] = 'Dabing'
+            elif 'titulky: ' in movie_info:
+                if 'čeština' in movie_info.split('itulky: ')[1].split('/')[0]:
+                    item['dab_tit'] = 'Titulky'
+        elif 'titulky: ' in movie_info:
+            if 'čeština' in movie_info.split('itulky: ')[1].split('/')[0]:
+                item['dab_tit'] = 'Titulky'
+        item['cinema_hall'] = str(dialog.css('div.modal-body__projection-cinema').get()).split('\n')[-2].strip()
+        item['time_start'] = dialog.css('div.modal-body__projection-time ::text').get().replace('\n', '').strip()
+        item['length'] = 'N/A'
+        if ' min.' in movie_info:
+            item['length'] = movie_info.split(' min.')[0].split()[-1]
+        item['price'] = dialog.css('button.modal-body__projection-price span::text').get()
+        item['calendar_url'] = 'http://www.kinoaero.cz' + dialog.css('a.modal-body__projection-calendar').attrib['href']
+        item['movie_attrs'] = []
+        if dialog.css('div.modal-body__right span.modal-body__tag') is not None:
+            for tag in dialog.css('div.modal-body__right span.modal-body__tag'):
+                item['movie_attrs'].append(tag.css('span.modal-body__tag ::text').get())
+        item['movie_info'] = movie_info
+        item['movie_score_urls'] = []
+        if dialog.css('div.modal-body__right a.btn-outline-secondary') is not None:
+            for score in dialog.css('div.modal-body__right a.btn-outline-secondary'):
+                item['movie_score_urls'].append(score.css('a.btn-outline-secondary').attrib['href'])
+        yield item
