@@ -27,15 +27,16 @@ class CinestarSpiderPipeline:
 
 import pymongo
 import sys
-from .items import CinestarProgramItem
+from .items import CinestarProgramItem, CinemacityProgramItem, AeroProgramItem
 
-class CineStarMongoDBPipeline:
+class MongoDBPipeline:
 
-    collection = 'cinestar_program'
+    #collection = ''
 
     def __init__(self, settings):
         self.mongodb_uri = settings.get('MONGODB_URI')
         self.mongodb_db = settings.get('MONGODB_DATABASE', 'items')
+        self.collection = settings.get('MONGODB_COLLECTION')
         if not self.mongodb_uri: sys.exit("You need to provide a Connection String.")
     
     @classmethod
@@ -64,35 +65,11 @@ class CineStarMongoDBPipeline:
         self.client.close()
 
     def process_item(self, item, spider):
-        data = dict(CinestarProgramItem(item))
-        self.db[self.collection].insert_one(data)
-        return item
-    
-from .items import CinemacityProgramItem
-
-class CinemaCityMongoDBPipeline:
-
-    collection = 'cinemacity_program'
-
-    def __init__(self, settings):
-        self.mongodb_uri = settings.get('MONGODB_URI')
-        self.mongodb_db = settings.get('MONGODB_DATABASE', 'items')
-        if not self.mongodb_uri: sys.exit("You need to provide a Connection String.")
-    
-    @classmethod
-    def from_crawler(cls, crawler):
-        return cls(crawler.settings)
-
-    def open_spider(self, spider):
-        self.client = pymongo.MongoClient(self.mongodb_uri)
-        self.db = self.client[self.mongodb_db]
-        # Start with a clean database
-        self.db[self.collection].delete_many({})
-
-    def close_spider(self, spider):
-        self.client.close()
-
-    def process_item(self, item, spider):
-        data = dict(CinemacityProgramItem(item))
+        if self.collection == 'cinestar_program':
+            data = dict(CinestarProgramItem(item))
+        elif self.collection == 'cinemacity_program':
+            data = dict(CinemacityProgramItem(item))
+        elif self.collection == 'aero_program':
+            data = dict(AeroProgramItem(item))
         self.db[self.collection].insert_one(data)
         return item

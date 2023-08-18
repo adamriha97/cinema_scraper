@@ -12,8 +12,9 @@ class CinemacityProgramSpiderSpider(scrapy.Spider):
     custom_settings = {
         'FEEDS': {'cinemacity_program_data.json': {'format': 'json', 'overwrite': True}},
         'FEED_EXPORT_ENCODING': 'utf-8',
+        'MONGODB_COLLECTION': 'cinemacity_program',
         'ITEM_PIPELINES': {
-            "cinema_scraper_project.pipelines.CinemaCityMongoDBPipeline": 710
+            "cinema_scraper_project.pipelines.MongoDBPipeline": 710
         }
         }
     
