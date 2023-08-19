@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import Chrome
 import time
 from selenium.webdriver.chrome.options import Options
-from cinema_scraper_project.items import AeroProgramItem
+from cinema_scraper_project.items import AeroProgramItem, AeroProgramItemSimple
 
 #from scrapy_playwright.page import PageMethod
 
@@ -25,6 +25,15 @@ class AeroProgramSpiderSpider(scrapy.Spider):
         }
 
     def start_requests(self):
+        url = 'https://www.kinoaero.cz/?sort=sort-by-data&cinema=1%2C2%2C3%2C7&hall=10%2C23%2C1%2C2%2C3'
+        yield SeleniumRequest(
+            url=url, 
+            callback=self.parse_notall, 
+            wait_time=15,
+            wait_until=EC.element_to_be_clickable((By.CLASS_NAME, 'program')) # modal-dialog modal-body__right modal-body__projection-time EC.element_to_be_clickable((By.CLASS_NAME, 'modal-body__projection-time')) EC.text_to_be_present_in_element((By.CLASS_NAME, "modal-body__projection-time"), ":")
+        )
+
+    def start_requests_all(self):
         options = Options()
         options.add_argument("--headless")
         options.add_argument("window-size=1920,1080")
@@ -79,10 +88,10 @@ class AeroProgramSpiderSpider(scrapy.Spider):
         item = AeroProgramItem()
         movie_info = str(dialog.css('div.modal-body__right h6').get()).split('\n')[1].strip()
         item['event_id'] = response.url.split('&projection=')[1]
+        item['event_url'] = response.url
         item['cinema_name3'] = dialog.css('div.modal-body__projection-cinema span::text').get()
-        item['date'] = dialog.css('div.modal-body__projection-day ::text').get().replace('\n', '').strip()
+        item['date_orig'] = dialog.css('div.modal-body__projection-day ::text').get().replace('\n', '').strip()
         item['movie_title'] = dialog.css('div.modal-body__right h3::text').get()
-        item['movie_url'] = response.url
         item['movie_img'] = 'http://www.kinoaero.cz' + dialog.css('div.slick-track img').attrib['src']
         item['movie_imgs'] = []
         for img in dialog.css('div.slick-track img'):
@@ -105,6 +114,7 @@ class AeroProgramSpiderSpider(scrapy.Spider):
         item['length'] = 'N/A'
         if ' min.' in movie_info:
             item['length'] = movie_info.split(' min.')[0].split()[-1]
+        #* zde u price je pravdepodobne problem, neni asi vzdy button
         item['price'] = dialog.css('button.modal-body__projection-price span::text').get()
         item['calendar_url'] = 'http://www.kinoaero.cz' + dialog.css('a.modal-body__projection-calendar').attrib['href']
         item['movie_attrs'] = []
@@ -121,3 +131,27 @@ class AeroProgramSpiderSpider(scrapy.Spider):
     #async def errback(self, failure):
     #    page = failure.request.meta["playwright_page"]
     #    await page.close()
+
+    def parse_notall(self, response):
+        for day in response.css('div.program'):
+            date = day.css('div.program__day span::text').get()
+            for film in day.css('div.program__info-row'):
+                event_id = film.css('div.program__movie-name').attrib['data-projection']
+                movie_attrs = []
+                if film.css('div.program__tags span.program__tag') is not None:
+                    for tag in film.css('div.program__tags span.program__tag'):
+                        movie_attrs.append(tag.css('span.program__tag ::text').get().replace('\n', '').strip())
+                item = AeroProgramItemSimple()
+                item['event_id'] = event_id
+                item['event_url'] = f'https://www.kinoaero.cz/?sort=sort-by-data&cinema=1%2C2%2C3%2C7&hall=10%2C23%2C1%2C2%2C3&projection={event_id}'
+                item['cinema_name3'] = film.css('div.program__place span::text').get()
+                item['date_orig'] = date
+                item['movie_title'] = film.css('div.program__movie-name ::text').get()
+                item['dab_tit'] = 'N/A'
+                if 'dabing' in movie_attrs or 'Dabing' in movie_attrs:
+                    item['dab_tit'] = 'Dabing'
+                item['cinema_hall'] = str(film.css('div.program__place').get()).split('\n')[-1].replace('</div>', '').strip()
+                item['time_start'] = film.css('div.program__hour ::text').get()
+                item['price'] = film.css('div.program__price span::text').get().replace('\n', '').strip()
+                item['movie_attrs'] = movie_attrs
+                yield item
