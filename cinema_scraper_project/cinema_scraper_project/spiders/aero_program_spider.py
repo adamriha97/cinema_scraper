@@ -7,7 +7,7 @@ import time
 from selenium.webdriver.chrome.options import Options
 from cinema_scraper_project.items import AeroProgramItem
 
-from scrapy_playwright.page import PageMethod
+#from scrapy_playwright.page import PageMethod
 
 
 class AeroProgramSpiderSpider(scrapy.Spider):
@@ -42,18 +42,18 @@ class AeroProgramSpiderSpider(scrapy.Spider):
         projections = driver.find_element(By.ID, 'projections-ids').get_attribute('data-projections').split(',')
         for projection in projections[:-1]:
             url = f'https://www.kinoaero.cz/?sort=sort-by-data&cinema=1%2C2%2C3%2C7&hall=10%2C23%2C1%2C2%2C3&projection={projection}'
-        #    yield SeleniumRequest(
-        #        url=url, 
-        #        callback=self.parse, 
-        #        wait_time=15,
-        #        wait_until=EC.text_to_be_present_in_element((By.CLASS_NAME, "modal-body__projection-time"), ":") # modal-dialog modal-body__right modal-body__projection-time EC.element_to_be_clickable((By.CLASS_NAME, 'modal-body__projection-time')) EC.text_to_be_present_in_element((By.CLASS_NAME, "program__place"), "Aero")
-        #    )
-            yield scrapy.Request(url, meta=dict(
-                playwright = True,
-                playwright_include_page = True, 
-                playwright_page_methods =[PageMethod('wait_for_selector', 'div.modal-dialog')],
-            errback=self.errback,
-            ))
+            yield SeleniumRequest(
+                url=url, 
+                callback=self.parse, 
+                wait_time=15,
+                wait_until=EC.element_to_be_clickable((By.CLASS_NAME, 'modal-dialog')) # modal-dialog modal-body__right modal-body__projection-time EC.element_to_be_clickable((By.CLASS_NAME, 'modal-body__projection-time')) EC.text_to_be_present_in_element((By.CLASS_NAME, "modal-body__projection-time"), ":")
+            )
+        #    yield scrapy.Request(url, meta=dict(
+        #        playwright = True,
+        #        playwright_include_page = True, 
+        #        playwright_page_methods =[PageMethod('wait_for_selector', 'div.modal-dialog')],
+        #    errback=self.errback,
+        #    ))
         driver.quit()
 
         ###url = 'https://www.kinoaero.cz/?sort=sort-by-data&cinema=1%2C2%2C3%2C7&hall=1%2C2%2C3' # https://www.kinoaero.cz/?cinema=2%2C3%2C7&sort=sort-by-data&hall=1%2C2%2C3
@@ -70,10 +70,10 @@ class AeroProgramSpiderSpider(scrapy.Spider):
         ###    wait_until=EC.element_to_be_clickable((By.CLASS_NAME, 'program')) # EC.text_to_be_present_in_element((By.CLASS_NAME, "program__place"), "Aero")
         ###)
 
-    async def parse(self, response):
-    #def parse(self, response):
-        page = response.meta["playwright_page"]
-        await page.close()
+    def parse(self, response):
+    #async def parse(self, response):
+    #    page = response.meta["playwright_page"]
+    #    await page.close()
 
         dialog = response.css('div.modal-dialog')
         item = AeroProgramItem()
@@ -118,6 +118,6 @@ class AeroProgramSpiderSpider(scrapy.Spider):
                 item['movie_score_urls'].append(score.css('a.btn-outline-secondary').attrib['href'])
         yield item
 
-    async def errback(self, failure):
-        page = failure.request.meta["playwright_page"]
-        await page.close()
+    #async def errback(self, failure):
+    #    page = failure.request.meta["playwright_page"]
+    #    await page.close()
