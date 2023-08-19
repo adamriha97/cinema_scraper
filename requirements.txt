@@ -19,4 +19,5 @@ w3lib==2.1.1
 pymongo
 selenium
 scrapy-selenium
+scrapy-playwright
 webdriver-manager
