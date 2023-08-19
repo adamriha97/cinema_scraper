@@ -20,7 +20,7 @@ class AeroProgramSpiderSpider(scrapy.Spider):
         'FEED_EXPORT_ENCODING': 'utf-8',
         'MONGODB_COLLECTION': 'aero_program',
         'ITEM_PIPELINES': {
-        #    "cinema_scraper_project.pipelines.MongoDBPipeline": 720
+            "cinema_scraper_project.pipelines.MongoDBPipeline": 720
         }
         }
 
@@ -40,7 +40,7 @@ class AeroProgramSpiderSpider(scrapy.Spider):
         driver.find_element(By.CLASS_NAME, 'custom-select__input-chevron-active').click()
         time.sleep(5)
         projections = driver.find_element(By.ID, 'projections-ids').get_attribute('data-projections').split(',')
-        for projection in projections[:30]:
+        for projection in projections[:-1]:
             url = f'https://www.kinoaero.cz/?sort=sort-by-data&cinema=1%2C2%2C3%2C7&hall=10%2C23%2C1%2C2%2C3&projection={projection}'
         #    yield SeleniumRequest(
         #        url=url, 
