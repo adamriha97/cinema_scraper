@@ -84,10 +84,10 @@ class CinemacityProgramItem(scrapy.Item):
 
 class AeroProgramItem(scrapy.Item):
     event_id = scrapy.Field()
+    event_url = scrapy.Field()
     cinema_name3 = scrapy.Field()
-    date = scrapy.Field()
+    date_orig = scrapy.Field() #* je potreba upravit format
     movie_title = scrapy.Field()
-    movie_url = scrapy.Field()
     movie_img = scrapy.Field()
     movie_imgs = scrapy.Field()
     movie_vid = scrapy.Field()
@@ -100,3 +100,15 @@ class AeroProgramItem(scrapy.Item):
     movie_attrs = scrapy.Field()
     movie_info = scrapy.Field()
     movie_score_urls = scrapy.Field()
+
+class AeroProgramItemSimple(scrapy.Item):
+    event_id = scrapy.Field()
+    event_url = scrapy.Field()
+    cinema_name3 = scrapy.Field()
+    date_orig = scrapy.Field() #* je potreba upravit format
+    movie_title = scrapy.Field()
+    dab_tit = scrapy.Field()
+    cinema_hall = scrapy.Field()
+    time_start = scrapy.Field()
+    price = scrapy.Field()
+    movie_attrs = scrapy.Field()
