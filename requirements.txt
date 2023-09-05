@@ -16,8 +16,8 @@ urllib3==1.26.14
 user-agents==2.2.0
 virtualenv==20.16.4
 w3lib==2.1.1
-pymongo
-selenium
-scrapy-selenium
+pymongo==4.4.1
+selenium==4.11.2
+scrapy-selenium==0.0.7
+webdriver-manager==4.0.0
 scrapy-playwright
-webdriver-manager
