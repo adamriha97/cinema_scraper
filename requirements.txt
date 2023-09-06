@@ -1,3 +1,4 @@
+Twisted==22.10.0
 beautifulsoup4==4.11.1
 ipython==8.7.0
 ipython-genutils==0.2.0
@@ -20,4 +21,3 @@ pymongo==4.4.1
 selenium==4.11.2
 scrapy-selenium==0.0.7
 webdriver-manager==4.0.0
-scrapy-playwright
