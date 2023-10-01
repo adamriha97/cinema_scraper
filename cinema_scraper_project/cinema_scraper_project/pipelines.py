@@ -27,7 +27,7 @@ class CinestarSpiderPipeline:
 
 import pymongo
 import sys
-from .items import CinestarProgramItem, CinemacityProgramItem, AeroProgramItem
+from .items import CinestarProgramItem, CinemacityProgramItem, AeroProgramItem, CSFDProgramItem, CSFDMovieItem
 
 class MongoDBPipeline:
 
@@ -71,5 +71,9 @@ class MongoDBPipeline:
             data = dict(CinemacityProgramItem(item))
         elif self.collection == 'aero_program':
             data = dict(AeroProgramItem(item))
+        elif self.collection == 'csfd_program':
+            data = dict(CSFDProgramItem(item))
+        elif self.collection == 'csfd_premiere':
+            data = dict(CSFDMovieItem(item))
         self.db[self.collection].insert_one(data)
         return item
