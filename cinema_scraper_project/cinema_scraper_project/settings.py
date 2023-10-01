@@ -125,6 +125,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Set other settings
 
 import os
+from datetime import datetime
 
 try:
     from dotenv import load_dotenv
@@ -146,3 +147,4 @@ MONGODB_URI = os.environ["MONGODB_URI"]
 MONGODB_DATABASE = os.environ["MONGODB_DATABASE"]
 
 DAYS_AHEAD_TO_SCRAPE = 14
+YEARS_OF_PREMIERES = [datetime.now().year]
