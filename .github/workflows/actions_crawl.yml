@@ -35,8 +35,5 @@ jobs:
             - name: Run spider
               run: |
                 cd cinema_scraper_project
-                scrapy crawl cinestar_program_spider
-                scrapy crawl cinemacity_program_spider
-                scrapy crawl aero_program_spider
                 scrapy crawl csfd_program_spider
                 scrapy crawl csfd_premiere_spider
