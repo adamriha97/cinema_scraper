@@ -3,7 +3,8 @@ name: Github Actions Crawl
 on:
     workflow_dispatch:
     schedule:
-        - cron:  '15 1 * * *'
+        - cron:  '15 1 * * 0,1,3,4,5,6'
+        - cron:  '15 1 * * 2'
 
 jobs:
     spider:
@@ -30,9 +31,16 @@ jobs:
               run: |
                 python -m pip install --upgrade pip
                 pip install -r requirements.txt
-                cp -v mid_for_scr_sel.py /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/scrapy_selenium/middlewares.py
+                cp -v mid_for_scr_sel.py /opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/scrapy_selenium/middlewares.py
 
             - name: Run spider
+              run: |
+                cd cinema_scraper_project
+                scrapy crawl csfd_program_spider
+                scrapy crawl csfd_premiere_spider
+            
+            - name: Run spider Tuesday
+              if: github.event.schedule != '15 1 * * 0,1,3,4,5,6'
               run: |
                 cd cinema_scraper_project
                 scrapy crawl cinestar_program_spider
