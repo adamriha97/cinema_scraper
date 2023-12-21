@@ -31,7 +31,7 @@ executing==1.2.0
 fastjsonschema==2.16.2
 filelock==3.9.0
 flake8==6.0.0
-fonttools==4.38.0
+fonttools==4.43.0
 hyperlink==21.0.0
 idna==3.4
 importlib-metadata==4.11.3
