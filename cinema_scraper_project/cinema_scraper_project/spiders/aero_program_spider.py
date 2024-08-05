@@ -7,6 +7,8 @@ import time
 from selenium.webdriver.chrome.options import Options
 from cinema_scraper_project.items import AeroProgramItem, AeroProgramItemSimple
 
+from shutil import which
+
 #from scrapy_playwright.page import PageMethod
 
 
@@ -21,6 +23,12 @@ class AeroProgramSpiderSpider(scrapy.Spider):
         'MONGODB_COLLECTION': 'aero_program',
         'ITEM_PIPELINES': {
             "cinema_scraper_project.pipelines.MongoDBPipeline": 720
+        },
+        'SELENIUM_DRIVER_NAME': 'chrome',
+        #'SELENIUM_DRIVER_EXECUTABLE_PATH': which('.\cinema_scraper_project\chromedriver'),
+        'SELENIUM_DRIVER_ARGUMENTS': ['--headless'],
+        'DOWNLOADER_MIDDLEWARES': {
+            'scrapy_selenium.SeleniumMiddleware': 800
         }
         }
 
